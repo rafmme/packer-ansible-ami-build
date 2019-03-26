@@ -1,0 +1,55 @@
+---
+- hosts: all
+  become: true
+  remote_user: ubuntu
+
+  vars:
+    NODEJS_VERSION: 10
+
+  tasks:
+    - name: Update cache
+      apt:
+        update_cache: yes
+
+    - name: Add gpg key for NodeJS LTS
+      apt_key:
+        url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+        state: present
+
+    - name: Install NodeJS Repo
+      apt_repository:
+        repo: "deb https://deb.nodesource.com/node_{{ NODEJS_VERSION }}.x {{ ansible_distribution_release }} main"
+        state: present
+        update_cache: yes
+
+    - name: Install Node.JS
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Add gpg key for Yarn
+      apt_key:
+        url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
+        state: present 
+
+    - name: Install Yarn Repo
+      apt_repository:
+        repo: "deb https://dl.yarnpkg.com/debian stable main"
+        state: present
+        update_cache: yes
+
+    - name: Install Yarn
+      apt:
+        name: yarn
+        state: present
+    
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: latest
+
+    - name: Start nginx
+      service: 
+        name: nginx
+        state: started
+
