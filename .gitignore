@@ -1,2 +1,3 @@
 # gcc coverage testing tool files
 .env
+playbook.retry
